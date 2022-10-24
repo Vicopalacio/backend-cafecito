@@ -1,10 +1,23 @@
+import { Producto } from "../models/producto";
+
 export const listarProductos = (req, res) => {
     res.send("esto es una prueba de una peticion get");
   }
 
-export const crearProductos = (req, res) => {
-    console.log(req.body)
-    //tomar body y validarlo
-    //guardar ese objeto del body en la base de datos
-    res.send("aqui tengo que crear un producto");
+export const crearProductos = async(req, res) => {
+    try{
+        console.log(req.body)
+        //tomar body y validarlo
+        //guardar ese objeto del body en la base de datos
+      const productoNuevo = new Producto(req.body);
+      await productoNuevo.save();
+      res.status(201).json({
+        mensaje: 'operacion exitosa'
+    })
+    }catch(error){
+        console.log(error);
+        res.status(404).json({
+            mensaje: 'ocurrio un error al intentar agregar un producto'
+        })
+    }
   }
