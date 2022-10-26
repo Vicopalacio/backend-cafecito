@@ -66,3 +66,19 @@ export const crearProductos = async(req, res) => {
       })
     }
   }
+
+  export const borrarProducto = async(req, res) => {
+    try{
+     //buscar el id de la ruta, luego pedir a la bd borrar ese producto
+     await Producto.findByIdAndDelete(req.params.id);
+     //enviar respuesta al frontend
+     res.status(200).json({
+      mensaje:'Se borro con exito'
+     })
+    }catch(error){
+      console.log(error);
+      res.status(404).json({
+        mensaje: 'No se pudo eliminar el producto'
+      })
+    }
+}
