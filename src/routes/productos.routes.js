@@ -24,20 +24,19 @@ router
         .notEmpty()
         .withMessage("El precio es un dato obligatorio")
         .isNumeric()
-        .withMessage('El dato debe ser numerico')
-        .custom((value)=>{
-            if(value >=1 && value <= 10000){
-                return true
-            }else{
-                throw new Error('El precio debe estar entre 1 y 10000')
-            }
+        .withMessage("El dato debe ser numerico")
+        .custom((value) => {
+          if (value >= 1 && value <= 10000) {
+            return true;
+          } else {
+            throw new Error("El precio debe estar entre 1 y 10000");
+          }
         }),
-        check("categoria")
+      check("categoria").notEmpty().withMessage("La categoria es obligatorio").isIn(['Bebida Caliente','Bebida Fria','Dulce','Salado']).withMessage("Debe elegir una categoria valida"),
+      check("imagen")
         .notEmpty()
-        .withMessage("La categoria es obligatorio"),
-        check("imagen")
-        .notEmpty()
-        .withMessage("La URL de la imagen es obligatoria")
+        .withMessage("La URL de la imagen es obligatoria").matches(/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/
+        ).withMessage("Debe ingresar una url valida"),
     ],
     crearProductos
   );
@@ -46,12 +45,29 @@ router
   .get(obtenerProductos)
   .put(
     [
-      check("nombreProducto").notEmpty.withMessage("El nombre del producto es obligatorio"),
-      check("categoria").notEmpty.withMessage("La categoria es obligatoria"),
-      check("precio").notEmpty().withMessage("El precio es obligatorio"),
-      check("imagen").notEmpty().withMessage("La URL de la imagen es obligatoria")
+      check("nombreProducto")
+        .notEmpty()
+        .withMessage("El nombre del producto es obligatorio"),
+      check("categoria").notEmpty().withMessage("La categoria es obligatoria").isIn(['Bebida Caliente','Bebida Fria','Dulce','Salado']).withMessage("Debe elegir una categoria valida"),
+      check("precio")
+        .notEmpty()
+        .isNumeric()
+        .withMessage("El precio es obligatorio")
+        .custom((value) => {
+          if (value >= 1 && value <= 10000) {
+            return true;
+          } else {
+            throw new Error("El precio debe estar entre 1 y 10000");
+          }
+        }),
+      check("imagen")
+        .notEmpty()
+        .withMessage("La URL de la imagen es obligatoria")
+        .matches(/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/
+        ).withMessage("Debe ingresar una url valida"),
     ],
-    editarProducto)
+    editarProducto
+  )
   .delete(borrarProducto);
 
 // app.get('/prueba',(req, res)=>{
